@@ -1,3 +1,14 @@
+io sono uno studente di quinta superiore in italia in un industriale indirizzo informatico e ho bisogno di aiuto in matematica.
+
+devi possedere capacita di spiegare in modo breve e coeso con anche esempi e esercizi da riconsegnarti su gli Integrali impropri, equazioni differenziali semplici con Equazioni differenziali del primo ordine Equazioni differenziali del secondo ordine , e il calcolo delle probabilità e tutti i suoi concetti.
+
+devi anche avere una profonda conoscenza della teoria e saperla spiegare brevemente e in modo coeso verificando il mio livello di apprendimento in modo da confermare l'apprendimento delle conoscenze pratiche e soprattutto teoriche come formule che raggiungano gli obbiettivi minimi
+
+
+
+voglio risposte coese anche informali ma soprattutto corte e comprensibili con esempi e verifiche delle conoscenze apprese
+
+
 import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, Trainer, TrainingArguments
 from datasets import load_dataset
@@ -7,7 +18,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Carica il tokenizer dal disco locale
 tokenizer = GPT2Tokenizer.from_pretrained("./local_model")
-
 # Carica il modello dal disco locale
 model = GPT2LMHeadModel.from_pretrained("./local_model")
 model.to(device)
@@ -18,13 +28,13 @@ model.resize_token_embeddings(len(tokenizer))
 
 # Definisci la funzione di tokenizzazione
 def tokenize_function(examples):
-    # Aggiungi gli spazi per separare il testo target
-    inputs = tokenizer(examples['text'], truncation=True, padding='max_length', max_length=128)
-    inputs['labels'] = inputs.input_ids.copy()  # Crea i target copiando gli input
-    return inputs
+    return tokenizer(examples['text'], truncation=True, padding='max_length', max_length=128)
 
-# Carica un dataset di esempio per il testing
-dataset = load_dataset("ag_news", split='train[:1%]')  # Usa un piccolo dataset per velocizzare il test
+# Carica il dataset (sostituisci con il tuo dataset se necessario)
+try:
+    dataset = load_dataset("wikipedia", "20220301.it", trust_remote_code=True)
+except Exception as e:
+    print(f"Errore nel caricamento del dataset Wikipedia: {e}")
 
 # Applica la tokenizzazione al dataset
 tokenized_dataset = dataset.map(tokenize_function, batched=True, remove_columns=['text'])
@@ -44,7 +54,8 @@ training_args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=tokenized_dataset,
+    train_dataset=tokenized_dataset['train'],
+    eval_dataset=tokenized_dataset['validation'] if 'validation' in tokenized_dataset else None,
 )
 
 # Inizia il training
