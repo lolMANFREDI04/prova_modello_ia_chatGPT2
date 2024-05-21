@@ -9,6 +9,38 @@ devi anche avere una profonda conoscenza della teoria e saperla spiegare breveme
 voglio risposte coese anche informali ma soprattutto corte e comprensibili con esempi e verifiche delle conoscenze apprese
 
 
+///!!!!IMPORTANTE!!!!!///  per fare partire il progetto su github riprodurre questi comandi:
+
+python.exe -m pip install --upgrade pip
+
+python -m venv myenv
+
+myenv\Scripts\activate
+
+pip install transformers
+
+pip install torch
+
+pip install datasets
+
+pip install mwparserfromhell
+
+huggingface-cli login    (crearsi un accout su huggingface, poi andare su " https://huggingface.co/settings/tokens/664cb3ce7c563d4d95cf506d " e creare il token poi inserirlo nel propt)
+
+pip install transformers datasets torch
+
+pip install transformers[torch] accelerate -U
+
+python chatbot.py
+
+python test.py 
+
+
+////////////////////////////////////////////////////
+
+
+/////// chatbot.py vecchio///////
+
 import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, Trainer, TrainingArguments
 from datasets import load_dataset
